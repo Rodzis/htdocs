@@ -1,0 +1,144 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.dark-theme {
+    background-color: #1C1B1B;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background-color: #1C1B1B;
+    width: 100%;
+    max-width: 600px;
+    padding: 50px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    color: #ffffff;
+    font-size: 45px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+.signup-form {
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.signup-form label {
+    color: #ffffff;
+    display: block;
+    margin-bottom: 6px;
+    font-size: 15px;
+}
+
+.form-message {
+    color: #ffffff;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.form-message a {
+    color: #2b989b;
+}
+
+.form-row-double {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+.form-row-double .input-group {
+    flex: 1;
+}
+
+.input-field {
+    width: 100%;
+    background-color: #d1d1d1;
+    border: 1px solid #b5b5b5;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 15px;
+    color: #222222;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.input-field::placeholder {
+    color: #333333;
+    opacity: 0.9;
+}
+
+.input-field:focus {
+    background-color: #e0e0e0;
+    border-color: #2b989b;
+    box-shadow: 0 0 0 2px rgba(43, 152, 155, 0.3);
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.submit-btn {
+    background-color: #2b989b;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 20px;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 36px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    letter-spacing: 0.2px;
+}
+
+.submit-btn:hover {
+    background-color: #248184;
+}
+
+.submit-btn:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+    .form-row-double {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .container {
+        padding: 30px 20px;
+    }
+
+    .title {
+        font-size: 35px;
+    }
+}
+
+.aorna {
+    color: #ffffff;
+    font-size: 15px;
+    margin-top: 16px;
+}
+
+.aorna a {
+    color: #2b989b;
+}
