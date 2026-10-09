@@ -14,8 +14,6 @@ $firstName = '';
 $lastName = '';
 $email = '';
 $error = '';
-$success = false;
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstName = is_string($_POST['first_name'] ?? null) ? trim($_POST['first_name']) : '';
     $lastName = is_string($_POST['last_name'] ?? null) ? trim($_POST['last_name']) : '';
@@ -62,8 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'password' => password_hash($password, PASSWORD_DEFAULT),
                     'role' => 'user',
                 ]);
-                $success = true;
                 unset($_SESSION['signup_token']);
+                header('Location: login.php?registered=1');
+                exit;
             }
         } catch (PDOException $exception) {
             if ($exception->getCode() === '23000' && ($exception->errorInfo[1] ?? null) === 1062) {
@@ -88,13 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <body class="dark-theme">
         <div class="container">
             <h1 class="title">Sign Up</h1>
-            <?php if ($success): ?>
-                <p class="form-message">Your account has been created. <a href="login.php">Log in here</a>.</p>
-            <?php else: ?>
-                <?php if ($error !== ''): ?>
-                    <p class="form-message" role="alert"><?= escape($error) ?></p>
-                <?php endif; ?>
-                <form action="signup.php" method="POST" class="signup-form">
+            <?php if ($error !== ''): ?>
+                <p class="form-message" role="alert"><?= escape($error) ?></p>
+            <?php endif; ?>
+            <form action="signup.php" method="POST" class="signup-form">
                     <input type="hidden" name="signup_token" value="<?= escape($_SESSION['signup_token']) ?>">
                     <div class="form-row-double">
                         <div class="input-group">
@@ -116,9 +112,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="button-container">
                         <button type="submit" class="submit-btn">Create account</button>
                     </div>
-                </form>
-                <p class="aorna">Already have an account? <a href="login.php">Log in here</a>.</p>
-            <?php endif; ?>
+            </form>
+            <p class="aorna">Already have an account? <a href="login.php">Log in here</a>.</p>
         </div>
     </body>
 </html>

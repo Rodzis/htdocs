@@ -1,50 +1,54 @@
 <?php
 session_start();
-$host     = 'localhost';
-$db_name  = 'dotolist';
-$db_user  = 'root';
-$db_pass  = '';
+$error = '';
+$email = '';
+
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $db_user, $db_pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
-}
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get form inputs and trim whitespace
-    $email    = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
+    $pdo = new PDO(
+        'mysql:host=localhost;dbname=dotolist;charset=utf8mb4',
+        'root',
+        '',
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
 
-    if (!empty($email) && !empty($password)) {
-        // Fetch the user by email using a prepared statement to prevent SQL Injection
-        $stmt = $pdo->prepare("SELECT id, name, password, role FROM users WHERE email = :email LIMIT 1");
-        $stmt->execute(['email' => $email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        error_log('[todolist login] Sign-in request received.');
+        $email = is_string($_POST['email'] ?? null) ? trim($_POST['email']) : '';
+        $password = is_string($_POST['password'] ?? null) ? $_POST['password'] : '';
 
-        // 4. Verify password against the securely stored hash
-        if ($user && password_verify($password, $user['password'])) {
-            // Regenerate session ID for security against session fixation
-            session_regenerate_id(true);
+        if ($email !== '' && $password !== '') {
+            $stmt = $pdo->prepare('SELECT id, name, password, role FROM users WHERE email = :email LIMIT 1');
+            $stmt->execute(['email' => $email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            error_log('[todolist login] User lookup completed: ' . ($user ? 'account found.' : 'account not found.'));
 
-            // 5. Store user information in the session
-            $_SESSION['user_id']   = $user['id'];
-            $_SESSION['user_name'] = $user['name'];
-            $_SESSION['user_role'] = $user['role']; // Stores 'admin' or 'user'
+            if ($user && password_verify($password, $user['password'])) {
+                error_log('[todolist login] Password verified.');
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $user['name'];
+                $_SESSION['user_role'] = $user['role'];
 
-            // 6. Redirect based on their role
-            if ($user['role'] === 'admin') {
-                header("Location: admin_dashboard.php");
-            } else {
-                header("Location: dashboard.php");
+                error_log('[todolist login] Session created; redirecting to foryou.php.');
+                header('Location: foryou.php');
+                exit;
             }
-            exit;
+
+            if ($user) {
+                error_log('[todolist login] Password verification failed.');
+            }
+            $error = 'Invalid email or password.';
         } else {
-            $error = "Invalid email or password.";
+            error_log('[todolist login] Email or password field was empty.');
+            $error = 'Please fill in all fields.';
         }
-    } else {
-        $error = "Please fill in all fields.";
     }
+} catch (PDOException $exception) {
+    error_log('Login database error: ' . $exception->getMessage());
+    $error = 'We could not connect to the database. Please try again later.';
 }
+
+$registered = isset($_GET['registered']);
 ?>
 
 <!DOCTYPE html>
@@ -59,9 +63,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <body class="dark-theme">
         <div class="container">
             <h1 class="title">Login</h1>
+            <?php if ($registered): ?>
+                <p class="form-message">Your account has been created. Please log in.</p>
+            <?php endif; ?>
+            <?php if ($error !== ''): ?>
+                <p class="form-message" role="alert"><?= htmlspecialchars($error, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></p>
+            <?php endif; ?>
             <form action="login.php" method="POST" class="signup-form">
                 <div class="input-group">
-                    <input type="email" id="email" name="email" class="input-field" placeholder="Enter email" required>
+                    <input type="email" id="email" name="email" class="input-field" placeholder="Enter email" value="<?= htmlspecialchars($email, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>" required>
                 </div>
 
                 <div class="input-group">

@@ -1,0 +1,21 @@
+cat << 'EOF' > .gitignore
+# XAMPP / Apache / OS temporary files
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# PHP & Dependency managers
+/vendor/
+composer.phar
+.phpunit.result.cache
+
+# Environment & Config files (sensitive data)
+.env
+.env.local
+config.local.php
+
+# IDE / Editor settings
+.vscode/
+.idea/
+EOF
