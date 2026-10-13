@@ -25,6 +25,46 @@ try {
     error_log('For You project lookup error: ' . $exception->getMessage());
     $projectCheckError = true;
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $projectName = is_string($_POST['project_name'] ?? null)
+        ? trim($_POST['project_name'])
+        : '';
+
+    if ($projectName === '' || strlen($projectName) > 100) {
+        $projectCreateError = 'Enter a project name of 1 to 100 characters.';
+    } else {
+        $pdo->beginTransaction();
+
+        try {
+            $projectStmt = $pdo->prepare(
+                'INSERT INTO projects (name) VALUES (:name)'
+            );
+            $projectStmt->execute(['name' => $projectName]);
+            $projectId = (int) $pdo->lastInsertId();
+
+            $assignmentStmt = $pdo->prepare(
+                'INSERT INTO project_assignments (project_id, user_id)
+                 VALUES (:project_id, :user_id)'
+            );
+            $assignmentStmt->execute([
+                'project_id' => $projectId,
+                'user_id' => $_SESSION['user_id'],
+            ]);
+
+            $pdo->commit();
+            header('Location: foryou.php?created=1');
+            exit;
+        } catch (PDOException $exception) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+
+            throw $exception;
+        }
+    }
+}
+
 ?>
 <html>
     <head>
