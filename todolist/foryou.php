@@ -11,9 +11,9 @@
     <body class="dark-theme">
         <div class="container">
             <h1 class="title">For You</h1>
-            <p>Welcome to the For You page! This page is accessible to all users.</p>
-            <p><a href="dashboard.php">Go to Dashboard</a></p>
-            <p><a href="logout.php">Logout</a></p>
+            <p class="aorna">Welcome to the For You page! This page is accessible to all users.</p>
+            <p class="aorna"><a class="a" href="dashboard.php">Go to Dashboard</a></p>
+            <p class="aorna"><a class="a" href="logout.php">Logout</a></p>
         </div>
     </body>
 </html>
