@@ -1,4 +1,30 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
+$hasProjects = false;
+$projectCheckError = false;
+
+try {
+    $pdo = new PDO(
+        'mysql:host=localhost;dbname=dotolist;charset=utf8mb4',
+        'root',
+        '',
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
+    $stmt = $pdo->prepare(
+        'SELECT 1 FROM project_assignments WHERE user_id = :user_id LIMIT 1'
+    );
+    $stmt->execute(['user_id' => $_SESSION['user_id']]);
+    $hasProjects = $stmt->fetchColumn() !== false;
+} catch (PDOException $exception) {
+    error_log('For You project lookup error: ' . $exception->getMessage());
+    $projectCheckError = true;
+}
 ?>
 <html>
     <head>
@@ -9,12 +35,7 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body class="for-you-page sidebar-collapsed">
-        <header class="top-bar">
-            <button class="sidebar-toggle" type="button" aria-label="Open sidebar" aria-expanded="false" aria-controls="sidebar"><img src="resources/expand-close.jpg" alt=""></button>
-            <input class="search-input" type="search" placeholder="search" aria-label="Search">
-            <button class="create-project-button" type="button">+ Create Project</button>
-            <button class="profile-button" type="button" aria-label="Profile"><img src="resources/profile.png" alt=""></button>
-        </header>
+        <?php require __DIR__ . '/topbar.php'; ?>
         <aside class="sidebar" id="sidebar" aria-label="Main navigation" inert>
             <nav>
                 <a class="sidebar-link active" href="foryou.php">For you</a>
@@ -25,9 +46,13 @@
         </aside>
         <main class="page-content">
             <h1 class="title">For You</h1>
-            <p class="aorna">Welcome to the For You page! This page is accessible to all users.</p>
-            <p class="aorna"><a class="a" href="dashboard.php">Go to Dashboard</a></p>
-            <p class="aorna"><a class="a" href="logout.php">Logout</a></p>
+            <?php if ($projectCheckError): ?>
+                <p class="aorna" role="alert">We could not check your projects. Please try again later.</p>
+            <?php elseif (!$hasProjects): ?>
+                <p class="aorna">You have no projects ;,(</p>
+            <?php else: ?>
+                <p class="aorna">Welcome to the For You page!</p>
+            <?php endif; ?>
         </main>
         <script src="script.js"></script>
     </body>
