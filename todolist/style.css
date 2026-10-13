@@ -5,6 +5,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+
 .dark-theme {
     background-color: #1C1B1B;
     display: flex;
@@ -77,7 +78,6 @@
     font-size: 15px;
     color: #222222;
     outline: none;
-    transition: all 0.2s ease-in-out;
 }
 
 .input-field::placeholder {
@@ -106,7 +106,6 @@
     border-radius: 8px;
     padding: 10px 36px;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
     letter-spacing: 0.2px;
 }
 
@@ -141,4 +140,165 @@
 
 .aorna a {
     color: #2b989b;
+}
+
+.for-you-page {
+    min-height: 100vh;
+    padding: 48px 0 0;
+    background-color: #1c1b1b;
+    color: #ffffff;
+}
+
+.top-bar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 2;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 120px;
+    padding: 4px 8px;
+    background-color: #1c1b1b;
+    border-bottom: 1px solid #777777;
+}
+
+.sidebar-toggle,
+.profile-button {
+    flex: 0 0 38px;
+    height: 38px;
+    border: 1px solid #aaaaaa;
+    border-radius: 3px;
+    background-color: #d1d1d1;
+    color: #222222;
+    cursor: pointer;
+}
+
+.sidebar-toggle {
+    padding: 0;
+}
+
+.sidebar-toggle img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.profile-button {
+    padding: 0;
+    overflow: hidden;
+}
+
+.profile-button img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.search-input {
+    flex: 1 1 0%;
+    width: 0;
+    min-width: 0;
+    height: 34px;
+    margin: 0;
+    border: 1px solid #aaaaaa;
+    border-radius: 6px;
+    background-color: #d1d1d1;
+    text-align: center;
+    font-size: 14px;
+}
+
+.create-project-button {
+    height: 34px;
+    padding: 0 40px;
+    border: 0;
+    border-radius: 4px;
+    background-color: #00c7e8;
+    color: #111111;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.profile-button {
+    font-size: 18px;
+    line-height: 18px;
+}
+
+.sidebar {
+    position: fixed;
+    inset: 48px auto 0 0;
+    z-index: 1;
+    width: 180px;
+    overflow: hidden;
+    background-color: #303030;
+    border-right: 1px solid #777777;
+}
+
+.sidebar nav {
+    width: 180px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 10px;
+    border-bottom: 1px solid #777777;
+    color: #eeeeee;
+    font-size: 16px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    background-color: #454545;
+}
+
+.sidebar-collapsed .sidebar {
+    width: 0;
+}
+
+.page-content {
+    min-height: calc(100vh - 48px);
+    padding: 30px;
+    margin-left: 180px;
+}
+
+.sidebar-collapsed .page-content {
+    margin-left: 0;
+}
+
+.page-content .title {
+    margin-bottom: 16px;
+    font-size: 32px;
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 150px;
+    }
+
+    .sidebar nav {
+        width: 150px;
+    }
+
+    .for-you-page:not(.sidebar-collapsed) .search-input {
+        margin-left: 92px;
+    }
+
+    .page-content {
+        margin-left: 150px;
+        padding: 24px 16px;
+    }
+
+    .sidebar-collapsed .page-content {
+        margin-left: 0;
+    }
+
+    .create-project-button {
+        padding: 0 8px;
+        font-size: 12px;
+    }
 }
